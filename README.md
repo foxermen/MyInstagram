@@ -1,2 +1,2 @@
 # MyInstagram
-MyInstagram project for tehnosphere
+MyInstagram project for technosphere
