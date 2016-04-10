@@ -12,7 +12,7 @@ import random
 def gen_username():
     s = ""
     for i in range(random.randint(8, 12)):
-        s += random.choice("qwertyuiopasdfghjklzcvbxnm1234567890")
+        s += random.choice("qwertyuiopasdfghjklzcvbxnm1234567890-_")
     return s
 
 

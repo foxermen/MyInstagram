@@ -35,6 +35,9 @@ class Post(models.Model):
     def __unicode__(self):
         return u'%s_%s' % (self.user.username, self.photo.photo.name)
 
+    class Meta:
+        ordering = ['-date_time']
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User)
