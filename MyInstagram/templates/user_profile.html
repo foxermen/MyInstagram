@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ username }} - MyInstagram</title>
+</head>
+<body>
+    <ul>
+    {% for post in posts %}
+        <li>{{ post.id }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
