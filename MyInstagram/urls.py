@@ -17,12 +17,19 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from MyInstagram import views
 
+user_to_users = [
+    url(r'^$', views.user_subscriptions_or_subscribers),
+    url(r'^(?P<page>\d+)/$', views.user_subscriptions_or_subscribers),
+]
+
 user_patterns = [
-    url(r'^$', views.user),
-    url(r'^(?P<page>\d+)/$', views.user),
+    url(r'^$', views.user_main),
+    url(r'^(?P<page>\d+)/$', views.user_main),
+    url(r'^post/(?P<post>\w+)/$', views.user_post),
+    url(r'^(subscriptions|subscribers)/', include(user_to_users)),
 ]
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^user/(?P<username>[\w-]+)/', include(user_patterns)),
+    url(r'^(?P<username>[\w-]+)/', include(user_patterns)),
 ]
