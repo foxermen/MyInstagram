@@ -7,7 +7,14 @@
 <body>
     <ul>
     {% for post in posts %}
-        <li>{{ post.id }}</li>
+        <li>
+            <image src="{{ post.photo.photo.url }}"></image>
+            <br />
+            <p>
+                Likes: {{ post.like_users.count }}
+                Comments: {{ post.comments.count }}
+            </p>
+        </li>
     {% endfor %}
     </ul>
 </body>

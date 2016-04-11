@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import os
 
 AbstractUser._meta.get_field('email')._unique = True
 AbstractUser._meta.get_field('email').blank = False
@@ -33,7 +34,7 @@ class Post(models.Model):
     comments = models.ManyToManyField(User, through='Comment', related_name='user_comments')
 
     def __unicode__(self):
-        return u'%s_%s' % (self.user.username, self.photo.photo.name)
+        return u'%s_%s' % (self.user.username, self.photo.photo)
 
     class Meta:
         ordering = ['-date_time']
