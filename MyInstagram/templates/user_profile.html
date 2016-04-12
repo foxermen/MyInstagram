@@ -5,10 +5,11 @@
     <title>{{ username }} - MyInstagram</title>
 </head>
 <body>
+{% if empty_posts == False %}
     <ul>
     {% for post in posts %}
         <li>
-            <image src="{{ post.photo.photo.url }}"></image>
+            <img src="{{ post.photo.photo.url }}" />
             <br />
             <p>
                 Likes: {{ post.like_users.count }}
@@ -17,5 +18,8 @@
         </li>
     {% endfor %}
     </ul>
+{% else %}
+    <p>User don't have posts</p>s
+{% endif %}
 </body>
 </html>

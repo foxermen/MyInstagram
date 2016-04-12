@@ -28,13 +28,13 @@ user_to_users = [
 user_patterns = [
     url(r'^$', views.user_main),
     url(r'^(?P<page>\d+)/$', views.user_main),
-    url(r'^post/(?P<post>\w+)/$', views.user_post),
     url(r'^(subscriptions|subscribers)/', include(user_to_users)),
 ]
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^(?P<username>[\w-]+)/', include(user_patterns)),
+    url(r'^post/(?P<post_id>\d+)/$', views.user_post),
+    url(r'^user/(?P<username>[\w-]+)/', include(user_patterns)),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.user.username }} post - MyInstagram</title>
+</head>
+<body>
+    <p>Created by {{ post.user.username }}</p>
+    <img src="{{ post.photo.photo.url }}">
+    <p>
+        Likes: {{ post.like_users.count }}
+        Created: {{ post.date_time|date:"d M Y, H:i:s" }}
+    </p>
+</body>
+</html>
