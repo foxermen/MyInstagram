@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ username }} {{ mode }} - MyInstagram</title>
+</head>
+<body>
+{% if subs %}
+    {{ username }} {{ mode }}:
+    <ul>
+    {% for sub in subs %}
+        <li>{{ sub.username }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>{{ username }} don't have {{ mode }}!</p>
+{% endif %}
+</body>
+</html>

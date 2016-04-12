@@ -11,5 +11,15 @@
         Likes: {{ post.like_users.count }}
         Created: {{ post.date_time|date:"d M Y, H:i:s" }}
     </p>
+    <div>
+        <p>Comments:</p>
+        {% if comments %}
+        <ul>
+            {% for comment in comments %}
+                <li>{{ comment.user.username }} write "{{ comment.text }}" in {{ comment.date_time|date:"d M Y, H:i:s" }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
 </body>
 </html>

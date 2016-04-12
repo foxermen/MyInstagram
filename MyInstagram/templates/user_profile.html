@@ -5,7 +5,7 @@
     <title>{{ username }} - MyInstagram</title>
 </head>
 <body>
-{% if empty_posts == False %}
+{% if posts %}
     <ul>
     {% for post in posts %}
         <li>
@@ -19,7 +19,7 @@
     {% endfor %}
     </ul>
 {% else %}
-    <p>User don't have posts</p>s
+    <p>User don't have posts</p>
 {% endif %}
 </body>
 </html>

@@ -18,6 +18,9 @@ class User(AbstractUser):
     city = models.ForeignKey(City, null=True, blank=True, default=None, related_name='+')
     subscriptions = models.ManyToManyField('self', symmetrical=False)
 
+    class Meta:
+        ordering = ['username']
+
 
 class Photo(models.Model):
     photo = models.ImageField()
@@ -48,3 +51,6 @@ class Comment(models.Model):
 
     def __unicode__(self):
         return u'%s is comment " %s "' % (self.user.username, self.text)
+
+    class Meta:
+        ordering = ['date_time']
