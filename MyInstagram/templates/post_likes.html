@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post {{ post.id }} likes - MyInstagram</title>
+</head>
+<body>
+{% if likes %}
+    <a href="{% url 'MyInstagram_post_url' post.id %}">Post {{ post.id }}</a> likes:
+    <ul>
+    {% for like in likes %}
+        <li><a href="{% url 'MyInstagram_user_url' like.username %}">{{ like.username }}</a></li>
+    {% endfor %}
+    </ul>
+    {% if page > 1 or next_page %}
+        <p>
+            {% if page > 1 %}
+                <a href="{% url 'MyInstagram_post_likes_page_url' post_id=post.id page=page|add:'-1' %}">&lt;&lt;Prev</a>
+            {% endif %}
+            {% if next_page %}
+                <a href="{% url 'MyInstagram_post_likes_page_url' post_id=post.id page=page|add:'1' %}">Next&gt;&gt;</a>
+            {% endif %}
+        </p>
+    {% endif %}
+{% else %}
+    <p><a href="{% url 'MyInstagram_post_url' post.id %}">Post {{ post.id }}</a> don't have likes!</p>
+{% endif %}
+</body>
+</html>

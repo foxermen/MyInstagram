@@ -5,10 +5,10 @@
     <title>{{ post.user.username }} post - MyInstagram</title>
 </head>
 <body>
-    <p>Created by {{ post.user.username }}</p>
+    <p>Created by <a href="{% url 'MyInstagram_user_url' post.user.username %}">{{ post.user.username }}</a></p>
     <img src="{{ post.photo.photo.url }}">
     <p>
-        Likes: {{ post.like_users.count }}
+        <a href="{% url 'MyInstagram_post_likes_url' post.id %}">Likes: {{ post.like_users.count }}</a>
         Created: {{ post.date_time|date:"d M Y, H:i:s" }}
     </p>
     <div>
@@ -16,9 +16,12 @@
         {% if comments %}
         <ul>
             {% for comment in comments %}
-                <li>{{ comment.user.username }} write "{{ comment.text }}" in {{ comment.date_time|date:"d M Y, H:i:s" }}</li>
+                <li><a href="{% url 'MyInstagram_user_url' comment.user.username %}">{{ comment.user.username }}</a>
+                    write "{{ comment.text }}" in {{ comment.date_time|date:"d M Y, H:i:s" }}</li>
             {% endfor %}
         </ul>
+        {% else %}
+            <p>No comments</p>
         {% endif %}
     </div>
 </body>

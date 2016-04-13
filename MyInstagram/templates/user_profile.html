@@ -5,21 +5,58 @@
     <title>{{ username }} - MyInstagram</title>
 </head>
 <body>
-{% if posts %}
-    <ul>
-    {% for post in posts %}
-        <li>
-            <img src="{{ post.photo.photo.url }}" />
-            <br />
-            <p>
-                Likes: {{ post.like_users.count }}
-                Comments: {{ post.comments.count }}
-            </p>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>User don't have posts</p>
-{% endif %}
+    <a href="{% url 'MyInstagram_user_url' username %}"><h2>{{ username }}</h2></a>
+    {% if user.last_name or user.first_name %}
+    <p style="font-size: 10pt">
+        {% if user.last_name %}
+            {{ user.last_name }}
+        {% endif %}
+        {% if user.first_name %}
+            {{ user.first_name }}
+        {% endif %}
+    </p>
+    {% endif %}
+
+    {% if user.city %}
+    <p style="font-size: 10pt">
+        {{ user.city.city }}
+    </p>
+    {% endif %}
+
+    <p>
+        <a href="{% url 'MyInstagram_user_subs_url' username 'subscriptions' %}">Subscriptions</a>
+        <a href="{% url 'MyInstagram_user_subs_url' username 'subscribers' %}">Subscribers</a>
+    </p>
+
+    {% if posts %}
+        <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{% url 'MyInstagram_post_url' post.id %}">
+                    <img src="{{ post.photo.photo.url }}" alt="{{ username }} post {{ post.id }}" />
+                    <br />
+                    <p>
+                        Likes: {{ post.like_users.count }}
+                        Comments: {{ post.comments.count }}
+                    </p>
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+        {% if page > 1 or next_page %}
+        <p>
+            {% if page > 1 %}
+                <a href="{% url 'MyInstagram_user_page_url' username=username page=page|add:'-1' %}">&lt;&lt;Prev</a>
+            {% endif %}
+            {% if next_page %}
+                <a href="{% url 'MyInstagram_user_page_url' username=username page=page|add:'1' %}">Next&gt;&gt;</a>
+            {% endif %}
+        </p>
+        {% endif %}
+    {% else %}
+        <p>{{ username }} don't have posts</p>
+    {% endif %}
+
+
 </body>
 </html>
