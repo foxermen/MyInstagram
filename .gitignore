@@ -107,4 +107,4 @@ tmp
 *.idea/
 */migrations/
 */settings.py
-files/
+MyInstagram/files/
