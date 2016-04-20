@@ -107,3 +107,4 @@ tmp
 *.idea/
 */migrations/
 */settings.py
+files/
