@@ -36,17 +36,17 @@
                 <div class="row">
                     <div class="col-md-4 text-center">
                         <a href="{% url 'MyInstagram_user_url' username %}">
-                            <h3>{{ posts_count }}<br /> Posts</h3>
+                            <h3><span class="glyphicon glyphicon-picture"></span> {{ posts_count }}<br /> Posts</h3>
                         </a>
                     </div>
                     <div class="col-md-4 text-center">
                         <a href="{% url 'MyInstagram_user_subs_url' username 'subscriptions' %}">
-                            <h3>{{ subscriptions_count }}<br /> Following</h3>
+                            <h3><span class="glyphicon glyphicon-user"></span> {{ subscriptions_count }}<br /> Following</h3>
                         </a>
                     </div>
                     <div class="col-md-4 text-center">
                         <a href="{% url 'MyInstagram_user_subs_url' username 'subscribers' %}">
-                            <h3>{{ subscribers_count }}<br /> Followers</h3>
+                            <h3><span class="glyphicon glyphicon-user"></span> {{ subscribers_count }}<br /> Followers</h3>
                         </a>
                     </div>
                 </div>
@@ -55,33 +55,17 @@
         </div>
     </div>
 
-
-    {% if posts %}
-        <ul>
-        {% for post in posts %}
-            <li>
-                <a href="{% url 'MyInstagram_post_url' post.id %}">
-                    <img src="{{ post.photo.photo.url }}" alt="{{ username }} post {{ post.id }}" class="img-thumbnail" width="20%"  />
-                    <br />
-                    <p>
-                        Likes: {{ post.like_users.count }}
-                        Comments: {{ post.comments.count }}
-                    </p>
-                </a>
-            </li>
-        {% endfor %}
-        </ul>
-        {% if page > 1 or next_page %}
-        <p>
-            {% if page > 1 %}
-                <a href="{% url 'MyInstagram_user_page_url' username=username page=page|add:'-1' %}">&lt;&lt;Prev</a>
-            {% endif %}
-            {% if next_page %}
-                <a href="{% url 'MyInstagram_user_page_url' username=username page=page|add:'1' %}">Next&gt;&gt;</a>
-            {% endif %}
-        </p>
+    <div class="container textcenter" style="margin-top: 20px;" id="photos">
+        {% if post_count == 0 %}
+            <p>{{ username }} don't have posts</p>
+        {% else %}
         {% endif %}
-    {% else %}
-        <p>{{ username }} don't have posts</p>
-    {% endif %}
+    </div>
+
+
+    <div id="perpage" data-per-page="{{ PER_PAGE }}"></div>
+    <div id="nextpostsurl" data-next-posts-url="{% url 'MyInstagram_next_posts' %}"></div>
+    <div id="username" data-username="{{ username }}"></div>
+    {% load staticfiles %}
+    <script src="{% static 'js/my-instagram-js.js' %}" type="text/javascript"></script>
 {% endblock content %}

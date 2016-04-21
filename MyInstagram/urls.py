@@ -27,24 +27,19 @@ user_to_users = [
 
 user_patterns = [
     url(r'^$', views.user_main, name='MyInstagram_user_url'),
-    url(r'^(?P<page>\d+)/$', views.user_main, name='MyInstagram_user_page_url'),
     url(r'^(?P<mode>subscriptions|subscribers)/', include(user_to_users)),
-]
-
-likes_patterns = [
-    url(r'^$', views.post_likes, name='MyInstagram_post_likes_url'),
-    url(r'^(?P<page>\d+)/$', views.post_likes, name='MyInstagram_post_likes_page_url'),
 ]
 
 post_patterns = [
     url(r'^$', views.user_post, name='MyInstagram_post_url'),
-    url(r'likes/', include(likes_patterns))
+    url(r'likes/', views.post_likes, name='MyInstagram_post_likes_url')
 ]
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^post/(?P<post_id>\d+)/', include(post_patterns)),
     url(r'^user/(?P<username>[\w-]+)/', include(user_patterns)),
+    url(r'^next-posts/$', views.next_posts, name="MyInstagram_next_posts")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,28 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ post.user.username }} post - MyInstagram</title>
-</head>
-<body>
-    <p>Created by <a href="{% url 'MyInstagram_user_url' post.user.username %}">{{ post.user.username }}</a></p>
-    <img src="{{ post.photo.photo.url }}">
-    <p>
-        <a href="{% url 'MyInstagram_post_likes_url' post.id %}">Likes: {{ post.like_users.count }}</a>
-        Created: {{ post.date_time|date:"d M Y, H:i:s" }}
-    </p>
-    <div>
-        <p>Comments:</p>
-        {% if comments %}
-        <ul>
-            {% for comment in comments %}
-                <li><a href="{% url 'MyInstagram_user_url' comment.user.username %}">{{ comment.user.username }}</a>
-                    write "{{ comment.text }}" in {{ comment.date_time|date:"d M Y, H:i:s" }}</li>
-            {% endfor %}
-        </ul>
-        {% else %}
-            <p>No comments</p>
-        {% endif %}
+{% extends "base.html" %}
+
+{% block title %}
+    {{ post.user.username }} post - MyInstagram
+{% endblock title %}
+
+{% block content %}
+    <div class="container" style="margin-top:20px;">
+        <div class="row">
+            <div class="col-md-8 text-center">
+                <img class="img-thumbnail img-responsive" src="{{ post.photo.photo.url }}" alt="{{ post.username }} post {{ post.id }}" style="height: 650px;
+                                                                                                                                               width: 650px;">
+            </div>
+            <div class="col-md-4 " style="margin-top: -20px; margin-left: -20px">
+                <div class="row">
+                    <h2><a href="{% url 'MyInstagram_user_url' post.user.username %}">{{ post.user.username }}</a></h2>
+                    <h6 style="margin-top: 5px  ">{{ post.date_time|date:"d M Y, H:i:s" }}</h6>
+                    <h4><a href="{% url 'MyInstagram_post_likes_url' post.id %}"><span class="glyphicon glyphicon-heart"></span> {{ post.like_users.count }} likes </a>
+                    <span class="glyphicon glyphicon-comment"></span> {{ post.comments.count }} comments </h4>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" data-spy="scroll" style="position: relative;
+                                                                    margin-left: -10px;
+                                                                    height: 530px;
+                                                                    margin-top: 10px;
+                                                                    overflow: auto;
+                                                                    overflow-x: auto;
+                                                                    overflow-y: auto;" >
+                        {% for comment in comments %}
+                            <p>
+                                <a href="{% url 'MyInstagram_user_url' comment.user.username %}">{{ comment.user.username }}</a> {{ comment.text }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+{% endblock content %}
