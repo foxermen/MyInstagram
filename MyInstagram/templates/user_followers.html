@@ -1,0 +1,13 @@
+{% extends "base_like_subs.html" %}
+
+{% block title %}
+    {{ username }} followers - MyInstagram
+{% endblock title %}
+
+{% block header %}
+    <a href="{% url 'MyInstagram_user_url' username %}">{{ username }}</a> followers <span class="glyphicon glyphicon-user"></span>
+{% endblock header %}
+
+{% block no-list %}
+    <a href="{% url 'MyInstagram_user_url' username %}">{{ username }}</a> don't have followers!
+{% endblock no-list %}

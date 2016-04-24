@@ -20,14 +20,10 @@ from MyInstagram import views
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-user_to_users = [
-    url(r'^$', views.user_subscriptions_or_subscribers, name='MyInstagram_user_subs_url'),
-    url(r'^(?P<page>\d+)/$', views.user_subscriptions_or_subscribers, name='MyInstagram_user_subs_page_url'),
-]
-
 user_patterns = [
     url(r'^$', views.user_main, name='MyInstagram_user_url'),
-    url(r'^(?P<mode>subscriptions|subscribers)/', include(user_to_users)),
+    url(r'^following/', views.user_following, name='MyInstagram_user_following'),
+    url(r'^followers/', views.user_followers, name='MyInstagram_user_followers'),
 ]
 
 post_patterns = [

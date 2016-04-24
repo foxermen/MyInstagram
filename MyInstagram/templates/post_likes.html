@@ -1,38 +1,13 @@
-{% extends "base.html" %}
+{% extends "base_like_subs.html" %}
 
 {% block title %}
     Post {{ post.id }} likes - MyInstagram
 {% endblock title %}
 
-{% block content %}
-    {% if likes1 %}
-        <div class="container text-center" style="margin-top: 20px">
-            <div class="row text-center">
-                <h2><a href="{% url 'MyInstagram_post_url' post.id %}">Post {{ post.id }}</a> likes <span class="glyphicon glyphicon-heart"></span> </h2>
-            </div>
-            <div class="row text-center" style="margin-top: 15px;">
-                <div class="col-md-2">
+{% block header %}
+    <a href="{% url 'MyInstagram_post_url' post.id %}">Post {{ post.id }}</a> likes <span class="glyphicon glyphicon-heart"></span>
+{% endblock header %}
 
-                </div>
-
-                <div class="col-md-4 text_center">
-                    {% for like in likes1 %}
-                        <a href="{% url 'MyInstagram_user_url' like.username %}"><div class="btn btn-info text-center" style="height: 40px; width: 100%; margin-top:2px; margin-bottom: 2px;"><p><span class="glyphicon glyphicon-user"></span> {{ like.username }}</p></div></a>
-                    {% endfor %}
-                </div>
-
-                <div class="col-md-4 text_center">
-                    {% for like in likes2 %}
-                        <a href="{% url 'MyInstagram_user_url' like.username %}"><div class="btn btn-info text-center" style="height: 40px; width: 100%; margin-top:2px; margin-bottom: 2px;"><p><span class="glyphicon glyphicon-user"></span> {{ like.username }}</p></div></a>
-                    {% endfor %}
-                </div>
-
-                <div class="col-md-2 text_center">
-
-                </div>
-            </div>
-        </div>
-    {% else %}
-        <p><a href="{% url 'MyInstagram_post_url' post.id %}">Post {{ post.id }}</a> don't have likes!</p>
-    {% endif %}
-{% endblock content %}
+{% block no-list %}
+    <a href="{% url 'MyInstagram_post_url' post.id %}">Post {{ post.id }}</a> don't have likes!
+{% endblock no-list %}

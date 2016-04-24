@@ -37,38 +37,38 @@ def user_post(request, post_id):
                                                       "comments": comments,})
 
 
-def user_subscriptions_or_subscribers(request, mode, username, page='1'):
-    try:
-        p = int(page)
-    except ValueError:
-        raise Http404
+def get_two_lists(list):
+    list1 = []
+    list2 = []
+    i = 0
+    for lst in list:
+        if i % 2 == 0:
+            list1.append(lst)
+        else:
+            list2.append(lst)
+        i += 1
 
+    return (list1, list2)
+
+
+def user_following(request, username):
     user = get_object_or_404(User, username=username)
-    if mode == "subscriptions":
-        list = user.subscriptions.all()
-    else:
-        list = user.user_set.all()
-    subs = []
-    for l in list:
-        if l.username != username:
-            subs.append(l)
+    list = user.subscriptions.all()
+    list1, list2 = get_two_lists(list=list)
 
-    if p == 1 and len(subs) == 0:
-        return render(request, 'user_subs.html', context={"mode": mode,
-                                                          "username": username,
-                                                          "subs": subs})
+    return render(request, 'user_following.html', context={"username": username,
+                                                           "list1": list1,
+                                                           "list2": list2,})
 
-    if (p - 1) * PER_PAGE >= len(subs):
-        raise Http404
 
-    next_page = p * PER_PAGE < len(subs)
-    subs = subs[(p - 1) * PER_PAGE:p * PER_PAGE]
+def user_followers(request, username):
+    user = get_object_or_404(User, username=username)
+    list = user.user_set.all()
+    list1, list2 = get_two_lists(list=list)
 
-    return render(request, 'user_subs.html', context={"mode": mode,
-                                                      "username": username,
-                                                      "subs": subs,
-                                                      "page": p,
-                                                      "next_page": next_page})
+    return render(request, 'user_followers.html', context={"username": username,
+                                                           "list1": list1,
+                                                           "list2": list2,})
 
 
 def post_likes(request, post_id):
@@ -77,21 +77,12 @@ def post_likes(request, post_id):
     except ValueError:
         raise Http404
     post = get_object_or_404(Post, id=id)
-    likes = post.like_users.all()
-    likes1 = []
-    likes2 = []
-    print likes.count()
-    i = 0
-    for like in likes:
-        if i % 2 == 0:
-            likes1.append(like)
-        else:
-            likes2.append(like)
-        i += 1
+    list = post.like_users.all()
+    list1, list2 = get_two_lists(list=list)
 
     return render(request, 'post_likes.html', context={"post": post,
-                                                       "likes1": likes1,
-                                                       "likes2": likes2,})
+                                                       "list1": list1,
+                                                       "list2": list2,})
 
 
 @csrf_exempt

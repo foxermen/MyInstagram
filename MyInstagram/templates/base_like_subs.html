@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if list1 %}
+        <div class="container text-center" style="margin-top: 20px">
+            <div class="row text-center">
+                <h2>
+                    {% block header %}
+                    {% endblock header %}
+                </h2>
+            </div>
+            <div class="row text-center" style="margin-top: 15px;">
+                <div class="col-md-2">
+
+                </div>
+
+                <div class="col-md-4 text_center">
+                    {% for lst in list1 %}
+                        <a href="{% url 'MyInstagram_user_url' lst.username %}"><div class="btn btn-info text-center" style="height: 35px; width: 100%; margin-top:2px; margin-bottom: 2px;"><p><span class="glyphicon glyphicon-user"></span> {{ lst.username }}</p></div></a>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-4 text_center">
+                    {% for lst in list2 %}
+                        <a href="{% url 'MyInstagram_user_url' lst.username %}"><div class="btn btn-info text-center" style="height: 35px; width: 100%; margin-top:2px; margin-bottom: 2px;"><p><span class="glyphicon glyphicon-user"></span> {{ lst.username }}</p></div></a>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-2 text_center">
+
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>
+            {% block no-list %}
+            {% endblock no-list %}
+        </p>
+    {% endif %}
+{% endblock content %}

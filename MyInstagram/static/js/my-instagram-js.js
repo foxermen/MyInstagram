@@ -1,9 +1,9 @@
 $(document).ready(function(){
     var inProgress = false;
     var startFrom = 0;
-    var perPage = $('#perpage').data('perPage');
-    var nextPostsUrl = $('#nextpostsurl').data('nextPostsUrl');
-    var username = $('#username').data('username');
+    var perPage = $('#varibles').data('perPage');
+    var nextPostsUrl = $('#varibles').data('nextPostsUrl');
+    var username = $('#varibles').data('username');
 
     function reaction() {
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 200 && !inProgress) {
