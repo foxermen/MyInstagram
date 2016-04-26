@@ -1,12 +1,14 @@
+"use strict"
 $(document).ready(function(){
     var inProgress = false;
     var startFrom = 0;
     var perPage = $('#varibles').data('perPage');
     var nextPostsUrl = $('#varibles').data('nextPostsUrl');
     var username = $('#varibles').data('username');
+    var timerId;
 
     function reaction() {
-        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 200 && !inProgress) {
+        if (($(window).scrollTop() + $(window).height() >= $(document).height() - 200) && !inProgress) {
             $.ajax({
                 url: nextPostsUrl,
                 method: 'POST',
@@ -37,12 +39,17 @@ $(document).ready(function(){
                         s = "";
                     }
                 }
-                inProgress = false;
                 startFrom += perPage;
+            }).always(function(){
+                inProgress = false;
             });
+            if ($(window).height() < $(document).height() - 200 && !(timerId === undefined)) {
+                clearInterval(timerId);
+                timerId = undefined;
+            }
         }
     }
 
+    timerId = setInterval(reaction, 100);
     $(window).scroll(reaction);
-    $(document).ready(reaction);
 });

@@ -7,7 +7,8 @@ from django.http import Http404, HttpResponse
 from django.core.urlresolvers import reverse
 import json
 
-PER_PAGE = 9
+# must be div 3
+PER_PAGE = 3
 
 
 def user_main(request, username):
