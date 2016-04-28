@@ -64,5 +64,6 @@
 
     {% load staticfiles %}
     <script id="varibles" data-per-page="{{ PER_PAGE }}" data-next-posts-url="{% url 'MyInstagram_next_posts' %}"
-            data-username="{{ username }}" src="{% static 'js/my-instagram-js.js' %}" type="text/javascript"></script>
+            data-username="{{ username }}" src="{% static 'js/my-instagram-auto-post-scroll-in-profile.js' %}"
+            type="text/javascript"></script>
 {% endblock content %}

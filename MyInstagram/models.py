@@ -1,6 +1,8 @@
+import random
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import os
 
 AbstractUser._meta.get_field('email')._unique = True
 AbstractUser._meta.get_field('email').blank = False
@@ -22,8 +24,14 @@ class User(AbstractUser):
         ordering = ['username']
 
 
+def get_unique_photo_name(instance, filename):
+        strq = datetime.strftime(datetime.now(), "%Y%m%d_%H%M%S_")
+        strq += str(random.randint(0, 1000000000)) + ".jpg"
+        return strq
+
+
 class Photo(models.Model):
-    photo = models.ImageField()
+    photo = models.ImageField(upload_to=get_unique_photo_name)
 
     def __unicode__(self):
         return u'%s' % self.photo.name

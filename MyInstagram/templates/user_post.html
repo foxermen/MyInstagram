@@ -8,20 +8,20 @@
     <div class="container" style="margin-top:20px;">
         <div class="row">
             <div class="col-md-8 text-center">
-                <img class="img-thumbnail img-responsive" src="{{ post.photo.photo.url }}" alt="{{ post.username }} post {{ post.id }}" style="height: 650px;
-                                                                                                                                               width: 650px;">
+                <img class="img-thumbnail img-responsive" src="{{ post.photo.photo.url }}" alt="{{ post.username }} post {{ post.id }}" style="height: 660px;
+                                                                                                                                               width: 660px;">
             </div>
             <div class="col-md-4 " style="margin-top: -20px; margin-left: -20px">
                 <div class="row">
                     <h2><a href="{% url 'MyInstagram_user_url' post.user.username %}">{{ post.user.username }}</a></h2>
                     <h6 style="margin-top: 5px  ">{{ post.date_time|date:"d M Y, H:i:s" }}</h6>
-                    <h4><a href="{% url 'MyInstagram_post_likes_url' post.id %}"><span class="glyphicon glyphicon-heart"></span> {{ post.like_users.count }} likes </a>
-                    <span class="glyphicon glyphicon-comment"></span> {{ post.comments.count }} comments </h4>
+                    <h4><a href="{% url 'MyInstagram_post_likes_url' post.id %}"><span class="glyphicon glyphicon-heart"></span><span id="like-text"> {{ post.like_users.count }} likes</span></a>
+                    <span class="glyphicon glyphicon-comment"></span><span id="comments-text"> {{ post.comments.count }} comments </span></h4>
                 </div>
                 <div class="row">
-                    <div class="col-md-12" data-spy="scroll" style="position: relative;
+                    <div id="comments" class="col-md-12" data-spy="scroll" style="position: relative;
                                                                     margin-left: -10px;
-                                                                    height: 530px;
+                                                                    height: 500px;
                                                                     margin-top: 10px;
                                                                     overflow: auto;
                                                                     overflow-x: auto;
@@ -33,7 +33,44 @@
                         {% endfor %}
                     </div>
                 </div>
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-12">
+                        {% if user.is_authenticated %}
+                            <form role="form" class="sform-horizontal" onsubmit="return false">
+                                <div class="form-group row">
+                                    <div class="col-md-1 text-center" style="margin-left: 0px; margin-right: 0px; padding-left: 0px; padding-right: 2px;">
+                                        <div class="row">
+                                            <button class="btn-link" id="like-button">
+                                                <h3 id="like-button-color" style="margin-top:1px;
+                                                           color: {% if is_like %}
+                                                                    red
+                                                                  {% else %}
+                                                                    silver
+                                                                  {% endif %};">
+                                                    <label><span class="glyphicon glyphicon-heart"></span></label>
+                                                </h3>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8" style="margin-left: 0px; margin-right: 0px; padding-left: 0px; padding-right: 1px;">
+                                        <input type="text" class="form-control" id="comment-text" placeholder="Add a caption">
+                                    </div>
+                                    <div class="col-md-3" style="margin-left: 0px; margin-right: 0px; padding-left: 5px; padding-right: 0px;">
+                                        <button type="submit" class="btn btn-success" id="comment-button">Send!</button>
+                                    </div>
+                                </div>
+                            </form>
+                        {% else %}
+                            <h4><a href="{% url 'MyInstagram_main_page' %}?next={% url 'MyInstagram_post_url' post.id %}    ">Log in</a> to like or comment.</h4>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    {% load staticfiles %}
+    <script id="varibles" data-is-like="{{ is_like }}" data-make-like-url="{% url 'MyInstagram_make_like' %}"
+            data-post-id="{{ post.id }}" data-add-comment-url="{% url 'MyInstagram_add_comment' %}"
+            data-get-comments-url="{% url 'MyInstagram_get_comments' %}"
+            src="{% static 'js/my-instagram-click-like-and-comment.js' %}" type="text/javascript"></script>
 {% endblock content %}

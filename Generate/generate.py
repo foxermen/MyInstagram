@@ -108,7 +108,7 @@ def gen_users(n=10000):
         subs.append(ThroughModel(from_user_id=u.id, to_user_id=u.id))
     User.subscriptions.through.objects.bulk_create(subs)
     global subscriptions
-    subscriptions = User.subscriptions.through.objects.all()[:]
+    subscriptions = User.subscriptions.through.objects.all()
 
 
 def get_random_user():
@@ -146,7 +146,7 @@ def gen_posts(n=10000):
         pst.append(gen_post())
     Post.objects.bulk_create(pst)
     global posts
-    posts = Post.objects.all()[:]
+    posts = Post.objects.all()
 
 
 def gen_random_comment():

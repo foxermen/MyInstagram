@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}
+    MyInstagram - add new post
+{% endblock title %}
+
+{% block content %}
+    <form enctype="multipart/form-data" action="{% url 'MyInstagram_add_new_post' %}" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+{% endblock content %}

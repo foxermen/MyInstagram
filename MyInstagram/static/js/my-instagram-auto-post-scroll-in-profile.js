@@ -19,7 +19,6 @@ $(document).ready(function(){
                     inProgress = true;
                 }
             }).done(function(data) {
-
                 if (data.length > 0) {
                     var s = ""
                     $.each(data, function(index, post) {
