@@ -26,42 +26,37 @@
                                                                     overflow: auto;
                                                                     overflow-x: auto;
                                                                     overflow-y: auto;" >
-                        {% for comment in comments %}
-                            <p>
-                                <a href="{% url 'MyInstagram_user_url' comment.user.username %}">{{ comment.user.username }}</a> {{ comment.text }}
-                            </p>
-                        {% endfor %}
                     </div>
                 </div>
                 <div class="row" style="margin-top: 10px;">
                     <div class="col-md-12">
                         {% if user.is_authenticated %}
-                            <form role="form" class="sform-horizontal" onsubmit="return false">
-                                <div class="form-group row">
-                                    <div class="col-md-1 text-center" style="margin-left: 0px; margin-right: 0px; padding-left: 0px; padding-right: 2px;">
-                                        <div class="row">
-                                            <button class="btn-link" id="like-button">
-                                                <h3 id="like-button-color" style="margin-top:1px;
-                                                           color: {% if is_like %}
-                                                                    red
-                                                                  {% else %}
-                                                                    silver
-                                                                  {% endif %};">
-                                                    <label><span class="glyphicon glyphicon-heart"></span></label>
-                                                </h3>
-                                            </button>
-                                        </div>
+                            <div class="form-group row">
+                                <div class="col-md-1 text-center" style="margin-left: 0px; margin-right: 0px; padding-left: 0px; padding-right: 2px;">
+                                    <div class="row">
+                                        <button class="btn-link" id="like-button">
+                                            <h3 id="like-button-color" style="margin-top:1px;
+                                                       color: {% if is_like %}
+                                                                red
+                                                              {% else %}
+                                                                silver
+                                                              {% endif %};">
+                                                <label><span class="glyphicon glyphicon-heart"></span></label>
+                                            </h3>
+                                        </button>
                                     </div>
+                                </div>
+                                <form role="form" class="form-horizontal" onsubmit="return false">
                                     <div class="col-md-8" style="margin-left: 0px; margin-right: 0px; padding-left: 0px; padding-right: 1px;">
                                         <input type="text" class="form-control" id="comment-text" placeholder="Add a caption">
                                     </div>
                                     <div class="col-md-3" style="margin-left: 0px; margin-right: 0px; padding-left: 5px; padding-right: 0px;">
                                         <button type="submit" class="btn btn-success" id="comment-button">Send!</button>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         {% else %}
-                            <h4><a href="{% url 'MyInstagram_main_page' %}?next={% url 'MyInstagram_post_url' post.id %}    ">Log in</a> to like or comment.</h4>
+                            <h4><a href="{% url 'MyInstagram_main_page' %}?next={{ request.path }}">Log in</a> to like or comment.</h4>
                         {% endif %}
                     </div>
                 </div>

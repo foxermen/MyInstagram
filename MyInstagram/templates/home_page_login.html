@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    Login
-    {% if user.is_authenticated %}
-        {{ user.username }}
-    {% else %}
-        No authenticated
-    {% endif %}
+    <div class="container text-center" id="posts" style="margin-top: 10px;">
+    </div>
+    {% load staticfiles %}
+    <script id="varibles" data-per-page="{{ PER_PAGE_MAIN }}" data-next-posts-url="{% url 'MyInstagram_next_posts_main' %}"
+            src="{% static 'js/my-instagram-auto-scroll-main-page.js' %}" type="text/javascript"></script>
 {% endblock content %}

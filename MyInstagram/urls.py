@@ -33,16 +33,19 @@ post_patterns = [
 
 urlpatterns = [
     url(r'^$', views.main_page, name="MyInstagram_main_page"),
+    url(r'^make-follow/$', views.make_follow, name="MyInstagram_make_follow"),
     url(r'^login/$', views.login_page, name="MyInstagram_login_page"),
     url(r'^register/$', views.register_page, name='MyInstagram_register_page'),
     url(r'^new-post/$', views.add_new_post, name='MyInstagram_add_new_post'),
+    url(r'^logout/$', views.logout_page, name='MyInstagram_logout_page'),
     url(r'^admin/', admin.site.urls),
     url(r'^post/(?P<post_id>\d+)/', include(post_patterns)),
     url(r'^user/(?P<username>[\w-]+)/', include(user_patterns)),
     url(r'^next-posts/$', views.next_posts, name="MyInstagram_next_posts"),
     url(r'^make-like/$', views.make_like, name="MyInstagram_make_like"),
     url(r'^add-comment/$', views.add_comment, name="MyInstagram_add_comment"),
-    url(r'^get-comments/$', views.get_comments, name="MyInstagram_get_comments")
+    url(r'^get-comments/$', views.get_comments, name="MyInstagram_get_comments"),
+    url(r'^next-posts-main/$', views.next_posts_main, name="MyInstagram_next_posts_main"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

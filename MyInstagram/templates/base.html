@@ -13,6 +13,39 @@
     </title>
 </head>
 <body>
+    <div style="height: 80px; border-bottom: 1px solid #edeeee;">
+        <div class="container">
+            {% if user.is_authenticated %}
+                <div class="row">
+                    <div class="col-md-2 text-center" style="padding-left: 60px;">
+                        <h2><a href="{% url 'MyInstagram_main_page' %}">MyInstagram</a></h2>
+                    </div>
+                    <div class="col-md-8">
+
+                    </div>
+                    <div class="col-md-2 text-right" style="padding-top: 17px; padding-right: 23px;">
+                        <h4>
+                            <a href="{% url 'MyInstagram_add_new_post' %}"><span class="glyphicon glyphicon-plus" style="margin-right: 10px;"></span></a>
+                            <a href="{% url 'MyInstagram_user_url' user.username %}"><span class="glyphicon glyphicon-user" style="margin-right: 10px;"></span></a>
+                            <a href="{% url 'MyInstagram_logout_page' %}?next={{ request.path }}"><span class="glyphicon glyphicon-log-out" style="margin-right: 10px;"></span></a>
+                        </h4>
+                    </div>
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="col-md-2 text-center" style="padding-left: 60px;">
+                        <h2><a href="{% url 'MyInstagram_main_page' %}">MyInstagram</a></h2>
+                    </div>
+                    <div class="col-md-9">
+
+                    </div>
+                    <div class="col-md-1 text-center" style="padding-top: 17px; padding-right: 25px;">
+                        <h4><a href="{% url 'MyInstagram_main_page' %}?next={{ request.path }}">Log in</a></h4>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
     {% block content %}
     {% endblock %}
 </body>

@@ -2,7 +2,7 @@
 
 
 {% block title %}
-    {{ username }} - MyInstagram
+    {{ page_user.username }} - MyInstagram
 {% endblock title %}
 
 {% block content %}
@@ -11,22 +11,22 @@
             <div class="col-md-2"></div>
             <div class="col-md-3">
                 <h2>
-                    <a href="{% url 'MyInstagram_user_url' username %}">{{ username }}</a>
+                    <a href="{% url 'MyInstagram_user_url' page_user.username %}">{{ page_user.username }}</a>
                     <small style="font-size: 13px;">
-                        {% if user.last_name or user.first_name %}
+                        {% if page_user.last_name or page_user.first_name %}
                             <p style="margin-top: 2px; margin-bottom: 2px;">
-                            {% if user.last_name %}
-                                {{ user.last_name }}
+                            {% if page_user.last_name %}
+                                {{ page_user.last_name }}
                             {% endif %}
-                            {% if user.first_name %}
-                                {{ user.first_name }}
+                            {% if page_user.first_name %}
+                                {{ page_user.first_name }}
                             {% endif %}
                             </p>
                         {% endif %}
 
-                        {% if user.city %}
+                        {% if page_user.city %}
                             <p style="margin-top: 0px;">
-                            {{ user.city.city }}
+                            {{ page_user.city.city }}
                             </p>
                         {% endif %}
                     </small>
@@ -35,17 +35,17 @@
             <div class="col-md-5">
                 <div class="row">
                     <div class="col-md-4 text-center">
-                        <a href="{% url 'MyInstagram_user_url' username %}">
+                        <a href="{% url 'MyInstagram_user_url' page_user.username %}">
                             <h3><span class="glyphicon glyphicon-picture"></span> {{ posts_count }}<br /> Posts</h3>
                         </a>
                     </div>
                     <div class="col-md-4 text-center">
-                        <a href="{% url 'MyInstagram_user_following' username %}">
+                        <a href="{% url 'MyInstagram_user_following' page_user.username %}">
                             <h3><span class="glyphicon glyphicon-user"></span> {{ subscriptions_count }}<br /> Following</h3>
                         </a>
                     </div>
                     <div class="col-md-4 text-center">
-                        <a href="{% url 'MyInstagram_user_followers' username %}">
+                        <a href="{% url 'MyInstagram_user_followers' page_user.username %}">
                             <h3><span class="glyphicon glyphicon-user"></span> {{ subscribers_count }}<br /> Followers</h3>
                         </a>
                     </div>
@@ -57,13 +57,12 @@
 
     <div class="container textcenter" style="margin-top: 20px;" id="photos">
         {% if post_count == 0 %}
-            <p>{{ username }} don't have posts</p>
-        {% else %}
+            <p>{{ page_user.username }} don't have posts</p>
         {% endif %}
     </div>
 
     {% load staticfiles %}
     <script id="varibles" data-per-page="{{ PER_PAGE }}" data-next-posts-url="{% url 'MyInstagram_next_posts' %}"
-            data-username="{{ username }}" src="{% static 'js/my-instagram-auto-post-scroll-in-profile.js' %}"
+            data-username="{{ page_user.username }}" src="{% static 'js/my-instagram-auto-post-scroll-in-profile.js' %}"
             type="text/javascript"></script>
 {% endblock content %}

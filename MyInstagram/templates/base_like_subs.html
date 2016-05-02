@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if list1 %}
+    {% if list.0 %}
+        {% load staticfiles %}
+        <script id="varibles" data-make-follow-url="{% url 'MyInstagram_make_follow' %}"
+            src="{% static 'js/my-instagram-follow.js' %}" type="text/javascript"></script>
         <div class="container text-center" style="margin-top: 20px">
             <div class="row text-center">
                 <h2>
@@ -10,24 +13,65 @@
                 </h2>
             </div>
             <div class="row text-center" style="margin-top: 15px;">
-                <div class="col-md-2">
-
+                <div class="col-md-1">
                 </div>
 
-                <div class="col-md-4 text_center">
-                    {% for lst in list1 %}
-                        <a href="{% url 'MyInstagram_user_url' lst.username %}"><div class="btn btn-info text-center" style="height: 35px; width: 100%; margin-top:2px; margin-bottom: 2px;"><p><span class="glyphicon glyphicon-user"></span> {{ lst.username }}</p></div></a>
-                    {% endfor %}
-                </div>
+                {% for list_col in list %}
 
-                <div class="col-md-4 text_center">
-                    {% for lst in list2 %}
-                        <a href="{% url 'MyInstagram_user_url' lst.username %}"><div class="btn btn-info text-center" style="height: 35px; width: 100%; margin-top:2px; margin-bottom: 2px;"><p><span class="glyphicon glyphicon-user"></span> {{ lst.username }}</p></div></a>
-                    {% endfor %}
-                </div>
+                    <div class="col-md-5 text-center">
+                        {% for lst in list_col %}
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <a href="{% url 'MyInstagram_user_url' lst.user.username %}">
+                                        <div class="btn btn-info text-center" style="height: 50px;
+                                                                                     margin-top:2px;
+                                                                                     margin-bottom: 2px;
+                                                                                     width: 100%;">
+                                            <div class="row text-center">
+                                                <div class="col-md-6 text-left">
+                                                    <h4 style="margin-top: 7px;">
+                                                        <span class="glyphicon glyphicon-user"></span>
+                                                        {{ lst.user.username }}
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4" style="height: 50px;
+                                                             margin-left: -29px;
+                                                             margin-bottom: 2px;
+                                                             margin-top: 2px;">
+                                    <button class="btn btn-default" type="button" id="follow-{{ lst.user.username }}"
+                                            onclick="make_follow('{{ lst.user.username }}', false)" style="width: 100%;
+                                                                                                     height: 100%;
+                                                                                                     display: {% if lst.follow %}
+                                                                                                                  none
+                                                                                                              {% else %}
+                                                                                                                    block
+                                                                                                              {% endif %};">
+                                        Follow
+                                    </button>
+                                    <button class="btn btn-success" type="button" id="unfollow-{{ lst.user.username }}"
+                                            onclick="make_follow('{{ lst.user.username }}', true)"  style="width: 100%;
+                                                                                                       height: 100%;
+                                                                                                       padding-bottom: 0px;
+                                                                                                       padding-top: 0px;
+                                                                                                       display: {% if lst.follow %}
+                                                                                                                    block
+                                                                                                                {% else %}
+                                                                                                                    none
+                                                                                                                {% endif %};">
+                                        Following
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
 
-                <div class="col-md-2 text_center">
+                {% endfor %}
 
+                <div class="col-md-1">
                 </div>
             </div>
         </div>

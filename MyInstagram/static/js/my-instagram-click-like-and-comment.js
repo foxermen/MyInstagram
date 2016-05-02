@@ -86,5 +86,6 @@ $(document).ready(function(){
         });
     }
 
+    get_comments();
     timerId = setInterval(get_comments, 5000);
 });

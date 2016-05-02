@@ -12,10 +12,7 @@
             $('#sign_up').css("display", "none");
         }
     </script>
-    <div class="container" style="height: 150px;">
-
-    </div>
-    <div class="container text-center">
+    <div class="container text-center" style="margin-top: 40px;">
         <div class="row" style="display: {% if first %}none{% else %}block{% endif %};" id="sign_in">
             <div class="col-md-12">
             <form class="form-horizontal" action="{% url 'MyInstagram_login_page' %}" method="post">{% csrf_token %}
