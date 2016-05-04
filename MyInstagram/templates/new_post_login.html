@@ -5,8 +5,66 @@
 {% endblock title %}
 
 {% block content %}
-    <form enctype="multipart/form-data" action="{% url 'MyInstagram_add_new_post' %}" method="post">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
+    <style>
+        .uploadButton {
+            display: block;
+            width: 150px;
+            background: #3df;
+            padding: 10px;
+            color: #FFF;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: Tahoma;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .uploadButton:hover {
+            background: #3ce;
+        }
+    </style>
+    {% load staticfiles %}
+    <script src="{% static 'js/jquery.Jcrop.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/jquery.Jcrop.min.css' %}" type="text/css" />
+    <div class="container" style="margin-top: 10px;">
+        <div class="row text-center" id="errors" style="color: red;">
+
+        </div>
+        <div class="row text-center">
+            <div class="col-md-5">
+
+            </div>
+            <div class="col-md-6">
+                <form enctype="multipart/form-data" method="post" id="upload-form" style="padding-left: 10px;">{% csrf_token %}
+                    <div id="upload-photo-div" style="display: block;">
+                        <label for="photo-input" class="uploadButton">New Photo</label>
+                        <input style="opacity: 0; z-index: -1;" type="file" name="photo" id="photo-input">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <progress class="progress progress-striped progress-animated" id="progress-upload"
+                      max="100" value="0" style="width: 100%;
+                                                 display: none;">
+            </progress>
+        </div>
+    </div>
+    <div class="container text-center" id="div-image" style="display: none;
+                                                             margin-bottom: 30px;">
+        <div class="row text-center" style="margin-bottom: 20px;">
+            <div class="col-md-5 text-left" id="crop">
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <div class="row text-center">
+            <form action="{% url 'MyInstagram_add_new_post' %}" method="post" id="send-form" style="padding-left: 30px;">{% csrf_token %}
+                {{ form }}
+                <button type="submit" class="btn btn-success">Create post</button>
+            </form>
+        </div>
+    </div>
+
+    <script id="varibles" data-send-url="{% url 'MyInstagram_upload_photo' %}"
+            src="{% static 'js/my-instagram-ajax-upload-file.js' %}" type="text/javascript"></script>
 {% endblock content %}

@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_delete
 
 AbstractUser._meta.get_field('email')._unique = True
 AbstractUser._meta.get_field('email').blank = False
@@ -35,6 +36,12 @@ class Photo(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.photo.name
+
+def delete_Photo_content(sender, **kwargs):
+    photo = kwargs.get("instance")
+    photo.photo.delete(save=False)
+
+post_delete.connect(delete_Photo_content, Photo)
 
 
 class Post(models.Model):

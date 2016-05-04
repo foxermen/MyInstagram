@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^register/$', views.register_page, name='MyInstagram_register_page'),
     url(r'^new-post/$', views.add_new_post, name='MyInstagram_add_new_post'),
     url(r'^logout/$', views.logout_page, name='MyInstagram_logout_page'),
+    url(r'^upload-photo/$', views.upload_file, name='MyInstagram_upload_photo'),
     url(r'^admin/', admin.site.urls),
     url(r'^post/(?P<post_id>\d+)/', include(post_patterns)),
     url(r'^user/(?P<username>[\w-]+)/', include(user_patterns)),

@@ -1,20 +1,27 @@
 # coding=utf-8
 import datetime
+
+from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from MyInstagram.models import User, Post, Comment, City, Photo
+from MyInstagram.models import User, Post, Comment, City, Photo, get_unique_photo_name
 from django.contrib import auth
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
-from MyInstagram.forms import LoginForm, RegisterForm, NewPostForm
-from django.core.exceptions import ValidationError
+from MyInstagram.forms import LoginForm, RegisterForm, NewPost
+from django import forms
+from PIL import Image
+from cStringIO import StringIO
 import json
 
 # must be div 3
 PER_PAGE = 9
 PER_PAGE_MAIN = 5
+MAX_PHOTO_SIZE = 1280
+MIN_PHOTO_SIZE = 400
 
 
 def user_main(request, username):
@@ -197,6 +204,8 @@ def make_follow(request):
             if request.POST["isFollow"] == "True" or request.POST["isFollow"] == "true":
                 is_follow = True
             username = request.POST["username"]
+            if username == request.user.username:
+                return HttpResponseBadRequest()
             user = get_object_or_404(User, username=username)
             if is_follow:
                 if request.user.subscriptions.filter(id=user.id).count() == 1:
@@ -275,7 +284,7 @@ def main_page(request):
     if not request.user.is_authenticated():
         if request.method == 'GET':
             next = '/'
-            if request.GET.__contains__("next"):
+            if request.GET.__contains__("next") and request.GET.get("next"):
                 next = request.GET.get("next", "/")
             login_form = LoginForm(initial={'next': next})
             register_form = RegisterForm(initial={'next': next})
@@ -284,11 +293,6 @@ def main_page(request):
         else:
             HttpResponseBadRequest()
     else:
-        following = request.user.subscriptions.all()
-        query = Q()
-        for f in following:
-            query = query | Q(user=f.id)
-        posts = Post.objects.filter(query)[0:PER_PAGE_MAIN]
         return render(request, 'home_page_login.html', {"PER_PAGE_MAIN": PER_PAGE_MAIN,})
 
 
@@ -308,10 +312,12 @@ def login_page(request):
                 auth.login(request, user)
                 return HttpResponseRedirect(next)
             else:
-                form.add_error(None, "Sorry, your password was incorrect. Please double-check your password.")
+                form.add_error(None, "Wrong username or password")
+        else:
+            form.add_error(None, "Wrong username or password")
 
     return render(request, 'home_page_not_login.html', {"login_form": form,
-                                                        "register_form": RegisterForm(request.POST),})
+                                                        "register_form": RegisterForm(initial={'next': form.cleaned_data.get('next')}),})
 
 
 @csrf_exempt
@@ -323,55 +329,112 @@ def register_page(request):
     else:
         form = RegisterForm(request.POST)
         if form.is_valid():
-            password = request.POST.get('password')
-            confirm_password = request.POST.get('confirm_password')
-            if password != confirm_password:
-                form.add_error('confirm_password', ValidationError("Passwords don't match",
-                                                                   code="invalid"))
-            else:
-                user = form.save()
-                user.set_password(password)
-                user.subscriptions.add(user)
-                city = request.POST.get('city', '')
-                if city:
-                    obj, created = City.objects.get_or_create(city=city)
-                    user.city = obj
-                user.save()
-                user = auth.authenticate(username=request.POST.get("username"), password=password)
-                auth.login(request, user)
-                return HttpResponseRedirect(next)
+            password = form.cleaned_data['password']
+            user = form.save()
+            user.set_password(password)
+            user.subscriptions.add(user)
+            city = request.POST.get('city', '')
+            if city:
+                obj, created = City.objects.get_or_create(city=city)
+                user.city = obj
+            user.save()
+            user = auth.authenticate(username=request.POST.get("username"), password=password)
+            auth.login(request, user)
+            return HttpResponseRedirect(next)
 
-    return render(request, 'home_page_not_login.html', {"login_form": LoginForm(request.POST),
+    dont = ['Password', 'Confirm password']
+    return render(request, 'home_page_not_login.html', {"login_form": LoginForm(initial={'next': form.cleaned_data.get('next'),}),
                                                         "register_form": form,
-                                                        "first": True})
+                                                        "first": True,
+                                                        "dont": dont})
 
 
 @csrf_exempt
 def add_new_post(request):
     if not request.user.is_authenticated():
-        return render(request, 'new_post_not_login.html')
+        return HttpResponseRedirect(reverse("MyInstagram_main_page") +
+                                    "?next=" + reverse("MyInstagram_add_new_post"))
     else:
         if request.method == 'POST':
-            form = NewPostForm(request.POST, request.FILES)
+            form = NewPost(request.POST)
             if form.is_valid():
-                f = request.FILES.get('photo')
-                p = Photo(photo=f)
+                x1 = form.cleaned_data['x1']
+                y1 = form.cleaned_data['y1']
+                x2 = form.cleaned_data['x2']
+                y2 = form.cleaned_data['y2']
+                id = form.cleaned_data['id']
+                try:
+                    photo = Photo.objects.get(id=id)
+                except Photo.DoesNotExist:
+                    return render(request, 'new_post_login.html', {"form": NewPost()})
+                im = Image.open(photo.photo)
+                new = im.crop([x1, y1, x2, y2])
+                f = StringIO()
+                p = Photo()
+                try:
+                    new.save(f, format='JPEG')
+                    s = f.getvalue()
+                    p.photo.save(get_unique_photo_name, ContentFile(s))
+                finally:
+                    f.close()
+                photo.delete()
                 p.save()
                 post = Post(user=request.user, photo=p)
                 post.save()
                 return HttpResponseRedirect(reverse("MyInstagram_post_url"  , kwargs={"post_id": post.id}))
-        else:
-            form = NewPostForm()
 
-    return render(request, 'new_post_login.html', {"form": form})
+    return render(request, 'new_post_login.html', {"form": NewPost()})
+
+
+@csrf_exempt
+@require_POST
+def upload_file(request):
+    if request.user.is_authenticated() and request.FILES.__contains__('photo'):
+        if request.POST.__contains__('photo_id'):
+            try:
+                prev_id = int(request.POST.get('photo_id', '0'))
+                print prev_id
+                prev_photo = Photo.objects.get(id=prev_id)
+                prev_photo.delete()
+            except Exception:
+                pass
+        f = request.FILES.get('photo')
+        photo = forms.ImageField()
+        try:
+            photo.clean(f)
+        except ValidationError:
+            json_data = json.dumps({"ok": False,
+                                    "error": "It's doesn't a photo"})
+            return HttpResponse(json_data, content_type='application/json')
+
+        p = Photo(photo=f)
+        p.save()
+        if p.photo.width > MAX_PHOTO_SIZE or p.photo.height > MAX_PHOTO_SIZE:
+            json_data = json.dumps({"ok": False,
+                                    "error": "Wrong Image size, you can upload " + str(MAX_PHOTO_SIZE) +
+                                             "x" + str(MAX_PHOTO_SIZE) + " maximal"})
+            p.delete()
+            return HttpResponse(json_data, content_type='application/json')
+
+        if p.photo.width < MIN_PHOTO_SIZE or p.photo.height < MIN_PHOTO_SIZE:
+            json_data = json.dumps({"ok": False,
+                                    "error": "Wrong Image size, you can upload " + str(MIN_PHOTO_SIZE) +
+                                             "x" + str(MIN_PHOTO_SIZE) + " minimum"})
+            p.delete()
+            return HttpResponse(json_data, content_type='application/json')
+
+        json_data = json.dumps({"ok": True,
+                                "photo_url": p.photo.url,
+                                "photo_id": p.id})
+        return HttpResponse(json_data, content_type='application/json')
+
+    return HttpResponseBadRequest()
 
 
 @csrf_exempt
 def logout_page(request):
     next = request.GET.get('next', '/')
     if request.user.is_authenticated():
-        print str(request.user.is_authenticated()) + " " + next
         auth.logout(request)
-        print str(request.user.is_authenticated()) + " " + next
 
     return HttpResponseRedirect(next)
