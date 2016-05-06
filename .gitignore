@@ -105,6 +105,5 @@ tmp
 
 *.jpg
 *.idea/
-*/migrations/
 MyInstagram/files/
 MyInstagram/keys.py
